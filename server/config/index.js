@@ -1,7 +1,9 @@
+require('dotenv').config('');
+
 const config = {
   server: {
-    hostname: '10.100.100.100',
-    port: 3000,
+    hostname: process.env.SERVER_HOST,
+    port: process.env.SERVER_PORT,
   },
 };
 
