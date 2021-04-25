@@ -9,6 +9,10 @@ const app = express();
 app.use(requestId);
 app.use(logger.requests);
 
+// Setup bodyParser
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
 // Setup router
 app.use('/api', api);
 app.use('/api/v1', api);
