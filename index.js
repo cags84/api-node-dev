@@ -2,6 +2,10 @@ const http = require('http');
 
 const app = require('./server');
 const config = require('./server/config');
+const database = require('./server/database');
+
+// Connect to database
+database.initDB();
 
 const { hostname, port } = config.server;
 
