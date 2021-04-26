@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const config = require('../config');
+const logger = require('../config/logger');
 
 const initDB = async () => {
   const options = {
@@ -10,13 +11,12 @@ const initDB = async () => {
     useCreateIndex: true,
   };
 
-  await mongoose.connect(
-    config.database.connectionString,
-    { ...options },
-    () => {
-      console.log('Database connected');
-    }
-  );
+  try {
+    await mongoose.connect(config.database.connectionString, options);
+    logger.info('Database connection successfully!');
+  } catch (error) {
+    logger.error(error);
+  }
 };
 
 module.exports = { initDB };
