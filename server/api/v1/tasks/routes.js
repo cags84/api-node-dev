@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const { create, all, read, update, destroy } = require('./controller');
+const { create, all, read, update, destroy, findId } = require('./controller');
 
 /*
  * /api/tasks/     POST    - CREATE
@@ -11,6 +11,8 @@ const { create, all, read, update, destroy } = require('./controller');
  */
 
 router.route('/').post(create).get(all);
+
+router.param('id', findId);
 
 router.route('/:id').get(read).put(update).delete(destroy);
 

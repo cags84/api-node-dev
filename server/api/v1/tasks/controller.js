@@ -21,27 +21,54 @@ const all = async (req, res, next) => {
   }
 };
 
-const read = (req, res, next) => {
-  const { params = {} } = req;
-  const { id } = params;
-  res.json({ id });
+const read = async (req, res, next) => {
+  const { doc = {} } = req;
+
+  res.json(doc);
 };
 
-const update = (req, res, next) => {
-  const { body = {}, params = {} } = req;
-  const { id } = params;
-  res.json({
-    id,
-    body,
-  });
+const update = async (req, res, next) => {
+  const { doc = {}, body = {} } = req;
+
+  Object.assign(doc, body);
+
+  try {
+    const updated = await doc.save();
+    res.json(updated);
+  } catch (err) {
+    next(new Error(err));
+  }
 };
 
-const destroy = (req, res, next) => {
-  const { params = {} } = req;
-  const { id } = params;
-  res.json({
-    id,
-  });
+const destroy = async (req, res, next) => {
+  const { doc = {} } = req;
+
+  try {
+    const removed = await doc.removed();
+    res.json(removed);
+  } catch (err) {
+    next(new Error(err));
+  }
 };
 
-module.exports = { create, all, read, update, destroy };
+const findId = async (req, res, next, id) => {
+  try {
+    const doc = await Model.findById(id).exec();
+    if (!doc) {
+      const message = 'Task not found';
+
+      next({
+        message,
+        statusCode: 404,
+        level: 'warn',
+      });
+    } else {
+      req.doc = doc;
+      next();
+    }
+  } catch (err) {
+    next(new Error(err));
+  }
+};
+
+module.exports = { create, all, read, update, destroy, findId };
